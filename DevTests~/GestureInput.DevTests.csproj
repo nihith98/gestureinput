@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Development test harness: compiles the pure-logic Core assembly and the
+    EditMode test sources against a minimal UnityEngine shim so the whole
+    suite runs with plain `dotnet test` — no Unity editor or license needed.
+    Unity never sees this folder (trailing `~`). The same sources compile
+    unchanged inside Unity as the GestureInput.Core / EditMode assemblies.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <RootNamespace>GestureInput</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Sources local to the harness (shim + smoke tests) -->
+    <Compile Include="UnityShim\**\*.cs" />
+    <Compile Include="*.cs" />
+
+    <!-- Linked package sources: exactly what Unity compiles into Core + EditMode tests -->
+    <Compile Include="..\Runtime\Core\**\*.cs" LinkBase="Core" />
+    <Compile Include="..\Tests\EditMode\**\*.cs" LinkBase="Tests" />
+
+    <!-- The custom-recognizer sample is pure Core-consumer code; test it too -->
+    <Compile Include="..\Samples~\CustomRecognizerExample\WaveRecognizer*.cs" LinkBase="Samples" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+  </ItemGroup>
+
+</Project>
