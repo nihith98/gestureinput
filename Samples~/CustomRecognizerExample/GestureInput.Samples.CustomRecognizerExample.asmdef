@@ -1,0 +1,17 @@
+{
+    "name": "GestureInput.Samples.CustomRecognizerExample",
+    "rootNamespace": "GestureInput.Samples",
+    "references": [
+        "GestureInput.Core",
+        "GestureInput.Unity"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -28,7 +28,7 @@
     <Compile Include="..\Tests\EditMode\**\*.cs" LinkBase="Tests" />
 
     <!-- The custom-recognizer sample is pure Core-consumer code; test it too -->
-    <Compile Include="..\Samples~\CustomRecognizerExample\WaveRecognizer*.cs" LinkBase="Samples" />
+    <Compile Include="..\Samples~\CustomRecognizerExample\WaveRecognizer.cs" Link="Samples\WaveRecognizer.cs" />
   </ItemGroup>
 
   <ItemGroup>

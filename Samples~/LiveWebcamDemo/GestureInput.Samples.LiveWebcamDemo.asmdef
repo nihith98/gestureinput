@@ -1,0 +1,25 @@
+{
+    "name": "GestureInput.Samples.LiveWebcamDemo",
+    "rootNamespace": "GestureInput.Samples.LiveDemo",
+    "references": [
+        "GestureInput.Core",
+        "GestureInput.Unity",
+        "GestureInput.Mediapipe",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.github.homuler.mediapipe",
+            "expression": "",
+            "define": "GESTUREINPUT_HAS_MEDIAPIPE"
+        }
+    ],
+    "noEngineReferences": false
+}

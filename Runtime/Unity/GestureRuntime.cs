@@ -42,6 +42,9 @@ namespace GestureInput.Unity
         /// <summary>Every gesture event, regardless of when its recognizer was registered.</summary>
         public event Action<GestureEvent> OnGesture;
 
+        /// <summary>Every perception frame after recognizers ran — for overlays, recorders, debugging.</summary>
+        public event Action<GestureFrame> OnFrame;
+
         public GestureRegistry Registry { get; } = new GestureRegistry();
 
         /// <summary>The frame producer. Assign before frames should flow (a driver does this in its Awake).</summary>
@@ -108,6 +111,7 @@ namespace GestureInput.Unity
                     OnGesture?.Invoke(e);
                 }
 
+                OnFrame?.Invoke(frame);
                 TrackHandLoss(in frame);
             }
         }
