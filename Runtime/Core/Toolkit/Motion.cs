@@ -12,8 +12,12 @@ namespace GestureInput.Core
         Down
     }
 
-    /// <summary>Motion analysis helpers over sliding windows of samples.</summary>
-    public static class Motion
+    /// <summary>
+    /// Motion analysis helpers over sliding windows of samples.
+    /// Named <c>MotionMath</c> (not <c>Motion</c>) to avoid colliding with
+    /// <see cref="UnityEngine.Motion"/> in files that import both namespaces.
+    /// </summary>
+    public static class MotionMath
     {
         /// <summary>Newest position minus oldest; zero with fewer than two samples.</summary>
         public static Vector2 Displacement(RingBuffer<TimedVector2> path)

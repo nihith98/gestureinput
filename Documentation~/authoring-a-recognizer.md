@@ -59,7 +59,7 @@ public sealed class WaveRecognizer : IGestureRecognizer
         _xs.Add(frame.Hand.Palm.x);
 
         // a wave = several direction reversals in x within the window
-        if (Motion.CountReversals(_xs, minDelta: 0.03f) >= 4 &&
+        if (MotionMath.CountReversals(_xs, minDelta: 0.03f) >= 4 &&
             _cooldown.Ready(frame.TimestampMs))
         {
             _cooldown.Trigger(frame.TimestampMs);
@@ -79,9 +79,9 @@ Toolkit pieces (`GestureInput.Core`, each unit-tested):
 | `Hysteresis(enter, exit)` | de-flicker a thresholded value (used by StaticGestureRecognizer) |
 | `Cooldown(ms)` | one event per gesture: `Ready(ts)` / `Trigger(ts)` — timestamp-driven |
 | `TimedVector2` | position + timestamp sample for motion windows |
-| `Motion.Displacement / Velocity / PathLength` | net movement, speed, traveled distance over a window |
-| `Motion.DominantDirection` | displacement → `SwipeDirection` cardinal |
-| `Motion.CountReversals` | oscillation counting for wave-like gestures |
+| `MotionMath.Displacement / Velocity / PathLength` | net movement, speed, traveled distance over a window |
+| `MotionMath.DominantDirection` | displacement → `SwipeDirection` cardinal |
+| `MotionMath.CountReversals` | oscillation counting for wave-like gestures |
 
 Dynamic gestures generally follow the state shape *Idle → Tracking →
 Accumulating → Fired → Cooldown* (SCOPE §6.3); `Hysteresis` and `Cooldown` are

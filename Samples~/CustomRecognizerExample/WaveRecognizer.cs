@@ -55,7 +55,7 @@ namespace GestureInput.Samples
             _xs.Add(frame.Hand.Palm.x);
 
             // a wave = several direction reversals in x within the window
-            if (Motion.CountReversals(_xs, _minDelta) >= _minReversals && _cooldown.Ready(frame.TimestampMs))
+            if (MotionMath.CountReversals(_xs, _minDelta) >= _minReversals && _cooldown.Ready(frame.TimestampMs))
             {
                 _cooldown.Trigger(frame.TimestampMs);
                 _xs.Clear();

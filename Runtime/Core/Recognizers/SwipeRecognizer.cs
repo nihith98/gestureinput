@@ -95,7 +95,7 @@ namespace GestureInput.Core
             float straightness = pathLength > 0f ? distance / pathLength : 0f;
             if (straightness < _minStraightness) return;
 
-            var direction = Motion.DominantDirection(displacement, deadZone: 0f);
+            var direction = MotionMath.DominantDirection(displacement, deadZone: 0f);
             string id = IdFor(direction);
             if (id == null) return;
 

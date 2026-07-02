@@ -12,7 +12,7 @@ project adheres to [Semantic Versioning](https://semver.org/).
   (backend-agnostic perception snapshot), `GestureDescriptor`, `GestureEvent`,
   `IGestureSink` — one interface to add any gesture.
 - **Toolkit**: `RingBuffer<T>`, `Hysteresis`, `Cooldown`, `TimedVector2`, and
-  `Motion` helpers (displacement, velocity, path length, dominant direction,
+  `MotionMath` helpers (displacement, velocity, path length, dominant direction,
   reversal counting).
 - **Built-in recognizers**: `StaticGestureRecognizer` (MediaPipe's seven static
   gestures with confidence hysteresis and Began/Updated/Ended phases) and

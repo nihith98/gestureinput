@@ -6,7 +6,7 @@ A complete third-party gesture — **wave** — added without touching the libra
 
 | File | Shows |
 |------|-------|
-| `WaveRecognizer.cs` | The recognizer itself: pure C#, only `GestureInput.Core` types + toolkit (`RingBuffer`, `Cooldown`, `Motion.CountReversals`). |
+| `WaveRecognizer.cs` | The recognizer itself: pure C#, only `GestureInput.Core` types + toolkit (`RingBuffer`, `Cooldown`, `MotionMath.CountReversals`). |
 | `WaveRegistration.cs` | Registration by code: `runtime.Registry.Register(new WaveRecognizer())`. |
 | `WaveRecognizerAsset.cs` | Registration by ScriptableObject asset with Inspector-tunable thresholds. |
 
