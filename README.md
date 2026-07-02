@@ -23,7 +23,7 @@ MIT licensed. Unity **2022.3+**.
 1. **Install this package** (Package Manager ▸ *Add package from git URL…*):
 
    ```
-   https://github.com/nihith/gestureinput.git
+   https://github.com/nihith98/gestureinput.git
    ```
 
    The Input System dependency (`com.unity.inputsystem`) resolves automatically.
