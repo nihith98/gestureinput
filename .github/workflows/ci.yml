@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  core-tests:
+    name: Core + EditMode tests (dotnet, no Unity license)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      # The DevTests~ harness compiles Runtime/Core + Tests/EditMode against a
+      # UnityEngine math shim, so the full EditMode suite (SPI, toolkit,
+      # recognizers, registry, codec, conformance) runs without a Unity editor.
+      - name: Run test suite
+        run: dotnet test "DevTests~/GestureInput.DevTests.csproj" --nologo
+
+  # Optional: run the same EditMode tests inside a real Unity editor plus the
+  # PlayMode device tests. Requires a Unity license secret — see
+  # https://game.ci/docs/github/activation. Enable by removing `if: false`
+  # and creating a host project that embeds this package under Packages/.
+  unity-tests:
+    name: Unity EditMode + PlayMode (game-ci)
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          testMode: all

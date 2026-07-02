@@ -5,7 +5,6 @@
         "GestureInput.Core",
         "GestureInput.Unity",
         "Unity.InputSystem",
-        "Unity.InputSystem.TestFramework",
         "UnityEngine.TestRunner"
     ],
     "includePlatforms": [],
