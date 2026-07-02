@@ -16,6 +16,7 @@ using GestureInput.Unity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Mediapipe;
 using Mediapipe.Tasks.Core;
 using Mediapipe.Tasks.Vision.Core;
@@ -95,8 +96,26 @@ namespace GestureInput.Mediapipe
             for (int i = 0; i < _frames.Length; i++)
                 _frames[i] = new TextureFrame(_webcam.width, _webcam.height, TextureFormat.RGBA32);
 
+            // Load the model bytes ourselves and pass them via modelAssetBuffer.
+            // MediaPipe's Tasks API resolves a relative modelAssetPath against the
+            // process working directory (the project root), NOT StreamingAssets, so a
+            // relative path fails with NOT_FOUND even when the file is present. Reading
+            // the bytes here sidesteps native path/ResourceManager resolution entirely.
+            // (Desktop/editor: StreamingAssets is a real folder. On Android it lives
+            // inside the APK and would need UnityWebRequest instead of File IO.)
+            string modelFullPath = Path.Combine(Application.streamingAssetsPath, modelAssetPath);
+            if (!File.Exists(modelFullPath))
+            {
+                Debug.LogError(
+                    $"[GestureInput] Gesture model not found at '{modelFullPath}'. Download " +
+                    "gesture_recognizer.task from the MediaPipe model zoo and place it in " +
+                    "Assets/StreamingAssets/ (the file name must match the Model Asset Path field).", this);
+                yield break;
+            }
+            byte[] modelBytes = File.ReadAllBytes(modelFullPath);
+
             var options = new GestureRecognizerOptions(
-                new BaseOptions(BaseOptions.Delegate.CPU, modelAssetPath: modelAssetPath),
+                new BaseOptions(BaseOptions.Delegate.CPU, modelAssetBuffer: modelBytes),
                 runningMode: RunningMode.LIVE_STREAM,
                 numHands: 1,
                 resultCallback: OnRecognitionResult);
