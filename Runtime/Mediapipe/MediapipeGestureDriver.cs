@@ -20,6 +20,7 @@ using Mediapipe;
 using Mediapipe.Tasks.Core;
 using Mediapipe.Tasks.Vision.Core;
 using Mediapipe.Tasks.Vision.GestureRecognizer;
+using Mediapipe.Unity.Experimental;   // TextureFrame
 #endif
 
 namespace GestureInput.Mediapipe
@@ -48,11 +49,20 @@ namespace GestureInput.Mediapipe
         [Tooltip("Run inference at most this often (ms). 0 = every rendered frame. Decouples model cost from render rate on CPU-only machines.")]
         [SerializeField] private int inferenceIntervalMs = 0;
 
+        [Tooltip("Flip the webcam image before inference. Adjust while watching the landmark overlay: the skeleton should track your real hand, not a mirror.")]
+        [SerializeField] private bool flipHorizontally = false;
+        [SerializeField] private bool flipVertically = true;
+
+        [Tooltip("Pooled input textures. Must exceed the number of inferences that can be in flight at once; each pooled frame is aliased by its Image until MediaPipe finishes with it.")]
+        [SerializeField] private int texturePoolSize = 10;
+
         private readonly FrameInbox _inbox = new FrameInbox();
         private WebCamTexture _webcam;
         private GestureRecognizer _recognizer;
-        private Color32[] _pixelBuffer;
+        private TextureFrame[] _frames;   // round-robin pool; BuildCPUImage aliases these
+        private int _frameCursor;
         private long _lastInferenceMs = long.MinValue;
+        private long _lastTimestampMs = long.MinValue;
         private long _framesSubmitted;
 
         /// <summary>Frames dropped because the main thread fell behind the camera.</summary>
@@ -77,7 +87,13 @@ namespace GestureInput.Mediapipe
             // wait until the camera actually delivers sized frames
             while (_webcam.width <= 16) yield return null;
 
-            _pixelBuffer = new Color32[_webcam.width * _webcam.height];
+            // A pool of textures the webcam is copied into. BuildCPUImage() wraps
+            // (does not copy) a frame's texture, so a frame must not be reused while
+            // its Image is still being processed asynchronously — hence a round-robin
+            // pool larger than the number of in-flight inferences.
+            _frames = new TextureFrame[Mathf.Max(2, texturePoolSize)];
+            for (int i = 0; i < _frames.Length; i++)
+                _frames[i] = new TextureFrame(_webcam.width, _webcam.height, TextureFormat.RGBA32);
 
             var options = new GestureRecognizerOptions(
                 new BaseOptions(BaseOptions.Delegate.CPU, modelAssetPath: modelAssetPath),
@@ -85,22 +101,34 @@ namespace GestureInput.Mediapipe
                 numHands: 1,
                 resultCallback: OnRecognitionResult);
             _recognizer = GestureRecognizer.CreateFromOptions(options);
+
+            // Capture at end of frame so the webcam texture is fully updated before
+            // the CPU readback (ReadTextureOnCPU), matching the plugin's own samples.
+            var waitForEndOfFrame = new WaitForEndOfFrame();
+            while (true)
+            {
+                yield return waitForEndOfFrame;
+                TrySubmitFrame();
+            }
         }
 
-        private void Update()
+        private void TrySubmitFrame()
         {
             if (_recognizer == null || _webcam == null || !_webcam.didUpdateThisFrame) return;
 
             long nowMs = (long)(Time.realtimeSinceStartupAsDouble * 1000.0);
             if (inferenceIntervalMs > 0 && nowMs - _lastInferenceMs < inferenceIntervalMs) return;
+            // MediaPipe's LIVE_STREAM requires strictly increasing timestamps.
+            if (nowMs <= _lastTimestampMs) nowMs = _lastTimestampMs + 1;
             _lastInferenceMs = nowMs;
+            _lastTimestampMs = nowMs;
 
-            _webcam.GetPixels32(_pixelBuffer);
-            // Image copies the pixel data; dispose our handle as soon as it is submitted.
-            using (var image = new Image(ImageFormat.Types.Format.Srgba, _webcam.width, _webcam.height, _webcam.width * 4, _pixelBuffer))
-            {
-                _recognizer.RecognizeAsync(image, nowMs, imageProcessingOptions: null);
-            }
+            var textureFrame = _frames[_frameCursor];
+            _frameCursor = (_frameCursor + 1) % _frames.Length;
+
+            textureFrame.ReadTextureOnCPU(_webcam, flipHorizontally, flipVertically);
+            var image = textureFrame.BuildCPUImage();
+            _recognizer.RecognizeAsync(image, nowMs, imageProcessingOptions: null);
             _framesSubmitted++;
         }
 
@@ -174,6 +202,12 @@ namespace GestureInput.Mediapipe
                 _webcam.Stop();
                 Destroy(_webcam);
                 _webcam = null;
+            }
+
+            if (_frames != null)
+            {
+                foreach (var frame in _frames) frame?.Dispose();
+                _frames = null;
             }
         }
 
