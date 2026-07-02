@@ -1,0 +1,19 @@
+# Unity host-project artifacts (if package is opened inside a project)
+Library/
+Temp/
+Obj/
+Logs/
+Build/
+UserSettings/
+
+# IDE / generated project files
+*.csproj.user
+*.sln.DotSettings.user
+.idea/
+.vs/
+*.suo
+
+# DevTests~ dotnet build output (the .csproj itself IS tracked)
+DevTests~/bin/
+DevTests~/obj/
+DevTests~/TestResults/

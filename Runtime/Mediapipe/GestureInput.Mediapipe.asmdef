@@ -1,0 +1,24 @@
+{
+    "name": "GestureInput.Mediapipe",
+    "rootNamespace": "GestureInput.Mediapipe",
+    "references": [
+        "GestureInput.Core",
+        "GestureInput.Unity",
+        "Mediapipe.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.github.homuler.mediapipe",
+            "expression": "",
+            "define": "GESTUREINPUT_HAS_MEDIAPIPE"
+        }
+    ],
+    "noEngineReferences": false
+}

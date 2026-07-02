@@ -1,0 +1,34 @@
+{
+  "name": "com.nihith.gestureinput",
+  "version": "0.1.0",
+  "displayName": "Gesture Input",
+  "description": "Turns webcam hand/body gestures into bindable Unity Input System controls, with an extensible recognizer SPI so developers can add their own static and dynamic gestures. Built on top of the MediaPipe Unity Plugin (installed separately).",
+  "unity": "2022.3",
+  "license": "MIT",
+  "keywords": [
+    "gesture",
+    "input",
+    "mediapipe",
+    "hand-tracking",
+    "inputsystem"
+  ],
+  "author": {
+    "name": "Nihith Sistla",
+    "email": "nihithsistla98@gmail.com"
+  },
+  "dependencies": {
+    "com.unity.inputsystem": "1.7.0"
+  },
+  "samples": [
+    {
+      "displayName": "Live Webcam Demo",
+      "description": "Live webcam scene with landmark overlay, gesture debug HUD, and a fixture recorder. Requires the MediaPipe Unity Plugin.",
+      "path": "Samples~/LiveWebcamDemo"
+    },
+    {
+      "displayName": "Custom Recognizer Example",
+      "description": "A complete third-party 'wave' gesture recognizer showing how to extend the SPI without touching the core.",
+      "path": "Samples~/CustomRecognizerExample"
+    }
+  ]
+}

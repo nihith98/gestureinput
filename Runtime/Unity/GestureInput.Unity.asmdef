@@ -1,0 +1,17 @@
+{
+    "name": "GestureInput.Unity",
+    "rootNamespace": "GestureInput.Unity",
+    "references": [
+        "GestureInput.Core",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
