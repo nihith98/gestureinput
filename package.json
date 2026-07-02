@@ -23,12 +23,12 @@
     {
       "displayName": "Live Webcam Demo",
       "description": "Live webcam scene with landmark overlay, gesture debug HUD, and a fixture recorder. Requires the MediaPipe Unity Plugin.",
-      "path": "Samples/LiveWebcamDemo"
+      "path": "Samples~/LiveWebcamDemo"
     },
     {
       "displayName": "Custom Recognizer Example",
       "description": "A complete third-party 'wave' gesture recognizer showing how to extend the SPI without touching the core.",
-      "path": "Samples/CustomRecognizerExample"
+      "path": "Samples~/CustomRecognizerExample"
     }
   ]
 }
