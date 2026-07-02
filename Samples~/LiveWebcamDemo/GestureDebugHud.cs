@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using GestureInput.Core;
 using GestureInput.Unity;
 
@@ -64,7 +65,7 @@ namespace GestureInput.Samples.LiveDemo
                 foreach (var descriptor in _runtime.Registry.AllDescriptors)
                 {
                     var control = device.TryGetChildControl(descriptor.Id);
-                    GUILayout.Label($"  <GestureDevice>/{descriptor.Id} = {control?.ReadValueAsObject() ?? "-"}");
+                    GUILayout.Label($"  <GestureDevice>/{descriptor.Id} = {ReadControl(control, descriptor.Kind)}");
                 }
             }
 
@@ -73,6 +74,21 @@ namespace GestureInput.Samples.LiveDemo
             foreach (var line in _recentEvents) GUILayout.Label(line);
 
             GUILayout.EndArea();
+        }
+
+        // Read a control's current value without the non-generic ReadValueAsObject()
+        // (absent from some Input System versions): controls are always typed as
+        // InputControl<float> (Button/Axis) or InputControl<Vector2>.
+        private static string ReadControl(InputControl control, GestureKind kind)
+        {
+            if (control == null) return "-";
+            switch (kind)
+            {
+                case GestureKind.Continuous2D:
+                    return control is InputControl<Vector2> v ? v.ReadValue().ToString() : "-";
+                default:
+                    return control is InputControl<float> f ? f.ReadValue().ToString("F2") : "-";
+            }
         }
 
         private static GUIStyle Rich() => new GUIStyle(GUI.skin.label) { richText = true };
